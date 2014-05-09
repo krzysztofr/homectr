@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# run at raspbian startup
+
+/usr/local/bin/gpio -g mode 7 out
+/usr/local/bin/gpio -g mode 8 out
+/usr/local/bin/gpio -g mode 25 out
+/usr/local/bin/gpio -g mode 24 out
+/usr/local/bin/gpio -g mode 23 out
+/usr/local/bin/gpio -g mode 18 out
+/usr/local/bin/gpio -g mode 15 out
+/usr/local/bin/gpio -g mode 14 out
