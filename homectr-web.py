@@ -1,6 +1,7 @@
 # coding=utf-8
 
-from bottle import Bottle, run, static_file
+from bottle import Bottle, run, static_file, request
+from models import Device, DeviceWrongAction
 
 app = Bottle()
 
@@ -8,9 +9,13 @@ app = Bottle()
 def index():
     return static_file('index.html', root='./public')
 
-@app.route('/hello')
+@app.route('/switch')
 def hello():
-    return "Hello World!"
+    pin = int(request.query.pin)
+    device = Device(name='device1', pin=pin, action=Device.ACTION_SWITCH)
+    device.switch()
+    return "OK"
+
 
 @app.route('/<filepath:path>')
 def server_static(filepath):
