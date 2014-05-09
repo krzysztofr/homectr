@@ -5,6 +5,11 @@ from models import Device, DeviceWrongAction
 
 app = Bottle()
 
+device = {}
+device[14] = Device(name='device1', pin=14, action=Device.ACTION_SWITCH)
+device[15] = Device(name='device2', pin=15, action=Device.ACTION_SWITCH)
+device[18] = Device(name='device3', pin=18, action=Device.ACTION_PULSE)
+
 @app.route('/')
 def index():
     return static_file('index.html', root='./public')
@@ -12,8 +17,7 @@ def index():
 @app.route('/switch')
 def hello():
     pin = int(request.query.pin)
-    device = Device(name='device1', pin=pin, action=Device.ACTION_SWITCH)
-    device.switch()
+    device[pin].switch()
     return "OK"
 
 
@@ -21,4 +25,4 @@ def hello():
 def server_static(filepath):
     return static_file(filepath, root='./public')
 
-run(app, host='localhost', port=8080)
+run(app, host='0.0.0.0', port=8080)
