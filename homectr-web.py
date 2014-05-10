@@ -1,23 +1,23 @@
 # coding=utf-8
 
-from bottle import Bottle, run, static_file, request
+from bottle import Bottle, run, static_file, request, template
 from models import Device, DeviceWrongAction
 
 app = Bottle()
 
-device = {}
-device[14] = Device(name='device1', pin=14, action=Device.ACTION_SWITCH)
-device[15] = Device(name='device2', pin=15, action=Device.ACTION_SWITCH)
-device[18] = Device(name='device3', pin=18, action=Device.ACTION_PULSE)
+devices = {}
+devices[14] = Device(name='device1', pin=14, action=Device.ACTION_SWITCH)
+devices[15] = Device(name='device2', pin=15, action=Device.ACTION_SWITCH)
+devices[18] = Device(name='device3', pin=18, action=Device.ACTION_PULSE)
 
 @app.route('/')
 def index():
-    return static_file('index.html', root='./public')
+    return template('public/index.html', devices=devices)
 
 @app.route('/switch')
 def switch_device():
     pin = int(request.query.pin)
-    device[pin].switch()
+    devices[pin].switch()
     return "OK"
 
 

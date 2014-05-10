@@ -21,9 +21,10 @@
                 <h1 class="title">homectr</h1>
                 <nav>
                     <ul>
-                        <li><a href="#" class="option" pin="14">front lights</a></li>
-                        <li><a href="#" class="option" pin="15">option 2</a></li>
-                        <li><a href="#" class="option" pin="18">option 3</a></li>
+                        <% for pin, device in devices.iteritems(): %>
+                               <li><a href="#" class="option" pin="{{device.pin}}">{{device.name}}</a></li>
+                        <% end %>
+
                     </ul>
                 </nav>
             </header>
