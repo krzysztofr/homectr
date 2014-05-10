@@ -15,7 +15,7 @@ def index():
     return static_file('index.html', root='./public')
 
 @app.route('/switch')
-def hello():
+def switch_device():
     pin = int(request.query.pin)
     device[pin].switch()
     return "OK"
