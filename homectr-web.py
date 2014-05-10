@@ -1,14 +1,9 @@
 # coding=utf-8
 
 from bottle import Bottle, run, static_file, request, template
-from models import Device, DeviceWrongAction
+from settings import devices, server_params
 
 app = Bottle()
-
-devices = {}
-devices[14] = Device(name='device1', pin=14, action=Device.ACTION_SWITCH)
-devices[15] = Device(name='device2', pin=15, action=Device.ACTION_SWITCH)
-devices[18] = Device(name='device3', pin=18, action=Device.ACTION_PULSE)
 
 @app.route('/')
 def index():
@@ -25,4 +20,4 @@ def switch_device():
 def server_static(filepath):
     return static_file(filepath, root='./public')
 
-run(app, host='0.0.0.0', port=8080)
+run(app, host=server_params['host'], port=server_params['port'])
