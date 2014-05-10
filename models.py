@@ -1,7 +1,8 @@
 # coding=utf-8
 
 from time import sleep
-from os import system
+
+from gpio_wrapper import gpio_commands
 
 class DeviceWrongAction(Exception):
     pass
@@ -18,15 +19,15 @@ class Device:
             raise DeviceWrongAction("Wrong action selected")
         self.action = action
         self.status = False
-        system('gpio -g mode %d out' % self.pin)
-        system('gpio -g write %d 0' % self.pin)
+        gpio_commands.mode(pin=self.pin, mode='out')
+        gpio_commands.write(pin=self.pin, value=0)
 
     def switch(self):
         if self.action == Device.ACTION_SWITCH:
             self.status = not self.status
-            system('gpio -g write %d %d' % (self.pin, int(self.status)))
+            gpio_commands.write(pin=self.pin, value=int(self.status))
         elif self.action == Device.ACTION_PULSE:
-            system('gpio -g write %d %d' % (self.pin, 1))
+            gpio_commands.write(pin=self.pin, value=1)
             sleep(.1)
-            system('gpio -g write %d %d' % (self.pin, 0))
+            gpio_commands.write(pin=self.pin, value=0)
 
