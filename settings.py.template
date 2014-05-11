@@ -1,0 +1,13 @@
+# coding=utf-8
+
+from models import Device, DeviceWrongAction
+
+devices = {}
+devices[15] = Device(name='lights front', pin=15, action=Device.ACTION_PULSE)
+devices[14] = Device(name='lights back', pin=14, action=Device.ACTION_SWITCH)
+
+server_params = {
+    'host': '0.0.0.0',
+    'port': 8080
+}
+
