@@ -59,7 +59,10 @@ init_parser.add_argument('--file', '-f', default='./users.db', action='store', h
 init_parser.set_defaults(func=init_db)
 
 args = argparser.parse_args()
-args = args.func(args)
+try:
+    args = args.func(args)
+except sqlite3.OperationalError:
+    print 'No database file. Initialize it first.g'
 
 
 
