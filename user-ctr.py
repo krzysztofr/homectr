@@ -26,9 +26,7 @@ def delete_session(args):
 def init_db(args):
     """Initialises database file."""
 
-    c = get_cursor(args.file)
-
-    c.execute("CREATE TABLE IF NOT EXISTS [sessions] ([session_id] VARCHAR PRIMARY KEY NOT NULL UNIQUE, [comment] VARCHAR);")
+    get_cursor(args.file).execute("CREATE TABLE IF NOT EXISTS [sessions] ([session_id] VARCHAR PRIMARY KEY NOT NULL UNIQUE, [comment] VARCHAR);")
 
     print "Database in file %s initialized." % args.file
 
