@@ -13,7 +13,11 @@ def get_cursor(filename):
 
 def list_sessions(args):
     """Lists sessions in the database file."""
-    print 'list'
+
+    print "Sessions in the database %s:\n\nSESSION ID\tCOMMENT (optional)" % args.file
+    for session in get_cursor(args.file).execute('SELECT session_id, comment FROM sessions;'):
+        print "%s\t%s" % session
+
 
 def add_session(args):
     """Adds session to the database file."""
