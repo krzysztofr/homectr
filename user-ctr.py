@@ -3,6 +3,7 @@
 # user control script
 
 import argparse
+import sqlite3
 
 def list_sessions(args):
     """Lists sessions in the database file."""
@@ -18,7 +19,13 @@ def delete_session(args):
 
 def init_db(args):
     """Initialises database file."""
-    print 'init'
+
+    conn = sqlite3.connect(args.file)
+    c = conn.cursor()
+    c.execute("CREATE TABLE IF NOT EXISTS [sessions] ([session_id] VARCHAR PRIMARY KEY NOT NULL UNIQUE, [comment] VARCHAR);")
+
+    print "Database in file %s initialized." % args.file
+
 
 argparser = argparse.ArgumentParser(description="homectr - user database manipulation")
 
@@ -30,6 +37,7 @@ list_parser.set_defaults(func=list_sessions)
 
 add_parser = subparsers.add_parser('add', help='Add session id')
 add_parser.add_argument('session_id', action='store', help='session id (recommended: 32 characters)')
+add_parser.add_argument('--comment', '-c', action='store', help="comment to the session")
 add_parser.add_argument('--file', '-f', default='./users.db', action='store', help='database file')
 add_parser.set_defaults(func=add_session)
 
