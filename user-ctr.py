@@ -21,7 +21,20 @@ def list_sessions(args):
 
 def add_session(args):
     """Adds session to the database file."""
-    print 'add'
+
+    # FIXME: it's ugly right now, wrap it in the 'with' statement - #5
+
+    conn = sqlite3.connect(args.file)
+    c = conn.cursor()
+    #c = get_cursor(args.file)
+
+    try:
+        c.execute('INSERT INTO sessions (session_id, comment) VALUES (?, ?)', (args.session_id, args.comment))
+        conn.commit()
+
+        print "Session %s added." % args.session_id
+    except sqlite3.IntegrityError:
+        print "Session with id %s already exists." % args.session_id
 
 def delete_session(args):
     """Deletes session from the database file."""
