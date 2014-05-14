@@ -62,7 +62,7 @@ args = argparser.parse_args()
 try:
     args = args.func(args)
 except sqlite3.OperationalError:
-    print 'No database file. Initialize it first.g'
+    print 'No database file. Initialize it first.'
 
 
 
