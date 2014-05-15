@@ -19,12 +19,12 @@ class DbSession:
         self.conn.commit()
 
 
-
 def get_cursor(filename):
     """Provides database cursor."""
 
     conn = sqlite3.connect(filename)
     return conn.cursor()
+
 
 def list_sessions(args):
     """Lists sessions in the database file."""
@@ -47,9 +47,11 @@ def add_session(args):
         except sqlite3.IntegrityError:
             print "Session with id %s already exists." % args.session_id
 
+
 def delete_session(args):
     """Deletes session from the database file."""
     print 'delete'
+
 
 def init_db(args):
     """Initialises database file."""
