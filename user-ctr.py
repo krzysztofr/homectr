@@ -31,8 +31,6 @@ def list_sessions(args):
 def add_session(args):
     """Adds session to the database file."""
 
-    # FIXME: it's ugly right now, wrap it in the 'with' statement - #5
-
     with DbSession(args.file) as c:
         try:
             c.execute('INSERT INTO sessions (session_id, comment) VALUES (?, ?)', (args.session_id, args.comment))
