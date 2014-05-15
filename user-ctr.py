@@ -19,19 +19,13 @@ class DbSession:
         self.conn.commit()
 
 
-def get_cursor(filename):
-    """Provides database cursor."""
-
-    conn = sqlite3.connect(filename)
-    return conn.cursor()
-
-
 def list_sessions(args):
     """Lists sessions in the database file."""
 
-    print "Sessions in the database %s:\n\nSESSION ID\tCOMMENT (optional)" % args.file
-    for session in get_cursor(args.file).execute('SELECT session_id, comment FROM sessions;'):
-        print "%s\t%s" % session
+    with DbSession(args.file) as c:
+        print "Sessions in the database %s:\n\nSESSION ID\tCOMMENT (optional)" % args.file
+        for session in c.execute('SELECT session_id, comment FROM sessions;'):
+            print "%s\t%s" % session
 
 
 def add_session(args):
@@ -56,7 +50,8 @@ def delete_session(args):
 def init_db(args):
     """Initialises database file."""
 
-    get_cursor(args.file).execute("CREATE TABLE IF NOT EXISTS [sessions] ([session_id] VARCHAR PRIMARY KEY NOT NULL UNIQUE, [comment] VARCHAR);")
+    with DbSession(args.file) as c:
+        c.execute("CREATE TABLE IF NOT EXISTS [sessions] ([session_id] VARCHAR PRIMARY KEY NOT NULL UNIQUE, [comment] VARCHAR);")
 
     print "Database in file %s initialized." % args.file
 
