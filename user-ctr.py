@@ -31,6 +31,10 @@ def list_sessions(args):
 def add_session(args):
     """Adds session to the database file."""
 
+    if args.session_id == "random":
+        import uuid
+        args.session_id = str(uuid.uuid4()).replace('-', '')
+
     with DbSession(args.file) as c:
         try:
             c.execute('INSERT INTO sessions (session_id, comment) VALUES (?, ?)', (args.session_id, args.comment))
@@ -69,7 +73,7 @@ list_parser.add_argument('--file', '-f', default='./users.db', action='store', h
 list_parser.set_defaults(func=list_sessions)
 
 add_parser = subparsers.add_parser('add', help='Add session id')
-add_parser.add_argument('session_id', action='store', help='session id (recommended: 32 characters)')
+add_parser.add_argument('session_id', action='store', help='session id (recommended: 32 characters, use "random" for random value)')
 add_parser.add_argument('--comment', '-c', action='store', help="comment to the session")
 add_parser.add_argument('--file', '-f', default='./users.db', action='store', help='database file')
 add_parser.set_defaults(func=add_session)
