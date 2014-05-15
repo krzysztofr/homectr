@@ -44,7 +44,13 @@ def add_session(args):
 
 def delete_session(args):
     """Deletes session from the database file."""
-    print 'delete'
+
+    with DbSession(args.file) as c:
+        c.execute('DELETE FROM sessions WHERE session_id = ?', (args.session_id,))
+        if c.rowcount == 0:
+            print 'No such session %s.' % args.session_id
+        else:
+            print 'Session id %s deleted.' % args.session_id
 
 
 def init_db(args):
