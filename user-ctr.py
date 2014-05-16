@@ -23,9 +23,9 @@ def list_sessions(args):
     """Lists sessions in the database file."""
 
     with DbSession(args.file) as c:
-        print "Sessions in the database %s:\n\nSESSION ID\tCOMMENT (optional)" % args.file
-        for session in c.execute('SELECT session_id, comment FROM sessions;'):
-            print "%s\t%s" % session
+        print "Sessions in the database %s:\n\nSESSION ID\tEMAIL (optional)\tCOMMENT (optional)" % args.file
+        for session in c.execute('SELECT session_id, email, comment FROM sessions;'):
+            print "%s\t%s\t%s" % session
 
 
 def add_session(args):
@@ -37,7 +37,7 @@ def add_session(args):
 
     with DbSession(args.file) as c:
         try:
-            c.execute('INSERT INTO sessions (session_id, comment) VALUES (?, ?)', (args.session_id, args.comment))
+            c.execute('INSERT INTO sessions (session_id, comment, email) VALUES (?, ?, ?)', (args.session_id, args.comment, args.email))
 
             print "Session %s added." % args.session_id
         except sqlite3.IntegrityError:
@@ -59,7 +59,7 @@ def init_db(args):
     """Initialises database file."""
 
     with DbSession(args.file) as c:
-        c.execute("CREATE TABLE IF NOT EXISTS [sessions] ([session_id] VARCHAR PRIMARY KEY NOT NULL UNIQUE, [comment] VARCHAR);")
+        c.execute("CREATE TABLE IF NOT EXISTS [sessions] ([session_id] VARCHAR PRIMARY KEY NOT NULL UNIQUE, [comment] VARCHAR, [email] VARCHAR);")
 
     print "Database in file %s initialized." % args.file
 
@@ -74,6 +74,7 @@ list_parser.set_defaults(func=list_sessions)
 
 add_parser = subparsers.add_parser('add', help='Add session id')
 add_parser.add_argument('session_id', action='store', help='session id (recommended: 32 characters, use "random" for random value)')
+add_parser.add_argument('--email', '-e', action='store', help="email address")
 add_parser.add_argument('--comment', '-c', action='store', help="comment to the session")
 add_parser.add_argument('--file', '-f', default='./users.db', action='store', help='database file')
 add_parser.set_defaults(func=add_session)
