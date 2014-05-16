@@ -31,17 +31,17 @@ def list_sessions(args):
 def add_session(args):
     """Adds session to the database file."""
 
-    if args.session_id == "random":
+    if args.id is None:
         import uuid
-        args.session_id = str(uuid.uuid4()).replace('-', '')
+        args.id = str(uuid.uuid4()).replace('-', '')
 
     with DbSession(args.file) as c:
         try:
-            c.execute('INSERT INTO sessions (session_id, comment, email) VALUES (?, ?, ?)', (args.session_id, args.comment, args.email))
+            c.execute('INSERT INTO sessions (session_id, comment, email) VALUES (?, ?, ?)', (args.id, args.comment, args.email))
 
-            print "Session %s added." % args.session_id
+            print "Session %s added." % args.id
         except sqlite3.IntegrityError:
-            print "Session with id %s already exists." % args.session_id
+            print "Session with id %s already exists." % args.id
 
 
 def delete_session(args):
@@ -72,8 +72,8 @@ list_parser = subparsers.add_parser('list', help='List users')
 list_parser.add_argument('--file', '-f', default='./users.db', action='store', help='database file')
 list_parser.set_defaults(func=list_sessions)
 
-add_parser = subparsers.add_parser('add', help='Add session id')
-add_parser.add_argument('session_id', action='store', help='session id (recommended: 32 characters, use "random" for random value)')
+add_parser = subparsers.add_parser('add', help='Add session id (generated randomly if not given)')
+add_parser.add_argument('--id', '-i', action='store', help='session id (recommended: 32 characters)')
 add_parser.add_argument('--email', '-e', action='store', help="email address")
 add_parser.add_argument('--comment', '-c', action='store', help="comment to the session")
 add_parser.add_argument('--file', '-f', default='./users.db', action='store', help='database file')
