@@ -4,6 +4,8 @@
 
 import argparse
 import sqlite3
+import smtplib
+from email.mime.text import MIMEText
 
 
 class DbSession:
@@ -17,6 +19,10 @@ class DbSession:
 
     def __exit__(self, type, value, traceback):
         self.conn.commit()
+
+
+def send_session_id(email, session_id):
+    pass  # TODO: implement that
 
 
 def list_sessions(args):
@@ -40,6 +46,10 @@ def add_session(args):
             c.execute('INSERT INTO sessions (session_id, comment, email) VALUES (?, ?, ?)', (args.id, args.comment, args.email))
 
             print "Session %s added." % args.id
+
+            if args.send and args.email is not None:
+                send_session_id(args.email, args.id)
+
         except sqlite3.IntegrityError:
             print "Session with id %s already exists." % args.id
 
@@ -75,6 +85,7 @@ list_parser.set_defaults(func=list_sessions)
 add_parser = subparsers.add_parser('add', help='Add session id (generated randomly if not given)')
 add_parser.add_argument('--id', '-i', action='store', help='session id (recommended: 32 characters)')
 add_parser.add_argument('--email', '-e', action='store', help="email address")
+add_parser.add_argument('--send', action='store_true', help="send session id to given e-mail")
 add_parser.add_argument('--comment', '-c', action='store', help="comment to the session")
 add_parser.add_argument('--file', '-f', default='./users.db', action='store', help='database file')
 add_parser.set_defaults(func=add_session)
