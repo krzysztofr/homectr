@@ -11,3 +11,11 @@ server_params = {
     'port': 8080
 }
 
+smtp = {
+    'host': '',
+    'user': '',
+    'pass': '',
+    'from': ''
+}
+
+app_address = 'http://www.example.com'

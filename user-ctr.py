@@ -7,6 +7,8 @@ import sqlite3
 import smtplib
 from email.mime.text import MIMEText
 
+import settings
+
 
 class DbSession:
     def __init__(self, filename):
@@ -22,7 +24,17 @@ class DbSession:
 
 
 def send_session_id(email, session_id):
-    pass  # TODO: implement that
+    print 'Sending registration e-mail to %s... ' % email,
+    s = smtplib.SMTP(settings.smtp['host'])
+    s.login(settings.smtp['user'], settings.smtp['pass'])
+
+    msg = MIMEText("Register your session to homectr at: %s/register_session/?session_id=%s" % (settings.app_address, session_id))
+    msg['Subject'] = "homectr session register"
+    msg['From'] = settings.smtp['from']
+    msg['To'] = email
+    s.sendmail(settings.smtp['from'], [email], msg.as_string())
+    s.quit()
+    print 'OK'
 
 
 def list_sessions(args):
