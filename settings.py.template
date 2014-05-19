@@ -1,11 +1,19 @@
 # coding=utf-8
 
-from models import Device, DeviceWrongAction
+from models import Device
 
-devices = {}
-devices[15] = Device(name='lights front', pin=15, action=Device.ACTION_PULSE)
-devices[14] = Device(name='lights back', pin=14, action=Device.ACTION_SWITCH)
-
+devices_definitions = (
+    {
+        'pin': 15,
+        'name': 'lights front',
+        'action': Device.ACTION_PULSE
+    },
+    {
+        'pin': 14,
+        'name': 'lights back',
+        'action': Device.ACTION_SWITCH
+    },
+)
 server_params = {
     'host': '0.0.0.0',
     'port': 8080

@@ -1,9 +1,17 @@
 # coding=utf-8
 
 from bottle import Bottle, run, static_file, request, template
-from settings import devices, server_params
+
+from settings import devices_definitions, server_params
+from models import Device, DeviceWrongAction
 
 app = Bottle()
+
+devices = {}
+
+for d in devices_definitions:
+    devices[d['pin']] = Device(name=d['name'], pin=d['pin'], action=d['action'])
+
 
 @app.route('/')
 def index():
