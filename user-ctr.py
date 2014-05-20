@@ -9,18 +9,7 @@ from email.mime.text import MIMEText
 
 import settings
 
-
-class DbSession:
-    def __init__(self, filename):
-        self.filename = filename
-        self.conn = sqlite3.connect(filename)
-        self.cursor = self.conn.cursor()
-
-    def __enter__(self):
-        return self.cursor
-
-    def __exit__(self, type, value, traceback):
-        self.conn.commit()
+from utils import DbSession
 
 
 def send_session_id(email, session_id):
@@ -28,7 +17,7 @@ def send_session_id(email, session_id):
     s = smtplib.SMTP(settings.smtp['host'])
     s.login(settings.smtp['user'], settings.smtp['pass'])
 
-    msg = MIMEText("Register your session to homectr at: %s/register_session/?session_id=%s" % (settings.app_address, session_id))
+    msg = MIMEText("Register your session to homectr at: %s/register_session/%s" % (settings.app_address, session_id))
     msg['Subject'] = "homectr session register"
     msg['From'] = settings.smtp['from']
     msg['To'] = email
@@ -91,7 +80,7 @@ argparser = argparse.ArgumentParser(description="homectr - user database manipul
 subparsers = argparser.add_subparsers(help='available actions')
 
 list_parser = subparsers.add_parser('list', help='List users')
-list_parser.add_argument('--file', '-f', default='./users.db', action='store', help='database file')
+list_parser.add_argument('--file', '-f', default=settings.session_db_file, action='store', help='database file')
 list_parser.set_defaults(func=list_sessions)
 
 add_parser = subparsers.add_parser('add', help='Add session id (generated randomly if not given)')
@@ -99,16 +88,16 @@ add_parser.add_argument('--id', '-i', action='store', help='session id (recommen
 add_parser.add_argument('--email', '-e', action='store', help="email address")
 add_parser.add_argument('--send', action='store_true', help="send session id to given e-mail")
 add_parser.add_argument('--comment', '-c', action='store', help="comment to the session")
-add_parser.add_argument('--file', '-f', default='./users.db', action='store', help='database file')
+add_parser.add_argument('--file', '-f', default=settings.session_db_file, action='store', help='database file')
 add_parser.set_defaults(func=add_session)
 
 delete_parser = subparsers.add_parser('delete', help='Delete session id')
 delete_parser.add_argument('session_id', action='store', help='session id to delete')
-delete_parser.add_argument('--file', '-f', default='./users.db', action='store', help='database file')
+delete_parser.add_argument('--file', '-f', default=settings.session_db_file, action='store', help='database file')
 delete_parser.set_defaults(func=delete_session)
 
 init_parser = subparsers.add_parser('init', help='Init users database')
-init_parser.add_argument('--file', '-f', default='./users.db', action='store', help='database file')
+init_parser.add_argument('--file', '-f', default=settings.session_db_file, action='store', help='database file')
 init_parser.set_defaults(func=init_db)
 
 args = argparser.parse_args()
