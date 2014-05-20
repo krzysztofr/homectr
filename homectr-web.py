@@ -1,9 +1,12 @@
 # coding=utf-8
 
-from bottle import Bottle, run, static_file, request, template
+import sqlite3
 
-from settings import devices_definitions, server_params
+from bottle import Bottle, run, static_file, request, template, response
+
+from settings import devices_definitions, server_params, session_db_file
 from models import Device, DeviceWrongAction
+from utils import DbSession
 
 app = Bottle()
 
@@ -22,6 +25,16 @@ def switch_device():
     pin = int(request.query.pin)
     devices[pin].switch()
     return "OK"
+
+@app.route('/register_session/<session_id>')
+def register_session(session_id):
+    with DbSession(session_db_file) as c:
+        result = c.execute('SELECT session_id, email, comment FROM sessions WHERE session_id = ?;', (session_id,)).fetchone()
+        if result is None:
+            response.status = 403
+            return 'Wrong session_id.'
+        
+
 
 
 @app.route('/<filepath:path>')
