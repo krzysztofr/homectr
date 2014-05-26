@@ -18,10 +18,28 @@ for d in devices_definitions:
 
 @app.route('/')
 def index():
+    session_id = request.get_cookie('session_id', secret=cookie_secret)
+    if session_id is None:
+        response.status = 403
+        return 'Missing session_id.'
+    with DbSession(session_db_file) as c:
+        result = c.execute('SELECT session_id FROM sessions WHERE session_id = ?;', (session_id,)).fetchone()
+        if result is None:
+            response.status = 403
+            return 'Wrong session_id.'
     return template('public/index.html', devices=devices)
 
 @app.route('/switch')
 def switch_device():
+    session_id = request.get_cookie('session_id', secret=cookie_secret)
+    if session_id is None:
+        response.status = 403
+        return 'Missing session_id.'
+    with DbSession(session_db_file) as c:
+        result = c.execute('SELECT session_id FROM sessions WHERE session_id = ?;', (session_id,)).fetchone()
+        if result is None:
+            response.status = 403
+            return 'Wrong session_id.'
     pin = int(request.query.pin)
     devices[pin].switch()
     return "OK"
