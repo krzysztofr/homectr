@@ -2,7 +2,7 @@
 
 import datetime
 
-from bottle import Bottle, run, static_file, request, template, response
+from bottle import Bottle, run, static_file, request, template, response, redirect
 
 from settings import devices_definitions, server_params, session_db_file, cookie_secret
 from models import Device, DeviceWrongAction
@@ -53,6 +53,7 @@ def register_session(session_id):
             return 'Wrong session_id.'
         else:
             response.set_cookie('session_id', session_id, expires=datetime.datetime.now() + datetime.timedelta(days=365), path="/", secret=cookie_secret)
+            redirect('/')
 
 
 
