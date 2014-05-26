@@ -1,6 +1,6 @@
 # coding=utf-8
 
-import sqlite3
+import datetime
 
 from bottle import Bottle, run, static_file, request, template, response
 
@@ -33,7 +33,9 @@ def register_session(session_id):
         if result is None:
             response.status = 403
             return 'Wrong session_id.'
-        
+        else:
+            response.set_cookie('session_id', session_id, expires=datetime.datetime.now() + datetime.timedelta(days=365), path="/")
+
 
 
 
