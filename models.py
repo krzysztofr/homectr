@@ -4,8 +4,10 @@ from time import sleep
 
 from gpio_wrapper import gpio_commands
 
+
 class DeviceWrongAction(Exception):
     pass
+
 
 class Device:
 

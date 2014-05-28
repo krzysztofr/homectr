@@ -15,10 +15,12 @@ devices = {}
 for d in devices_definitions:
     devices[d['pin']] = Device(name=d['name'], pin=d['pin'], action=d['action'])
 
+
 @app.route('/')
 @session_required
 def index():
     return template('public/index.html', devices=devices)
+
 
 @app.route('/switch')
 @session_required
@@ -26,6 +28,7 @@ def switch_device():
     pin = int(request.query.pin)
     devices[pin].switch()
     return "OK"
+
 
 @app.route('/register_session/<session_id>')
 def register_session(session_id):
@@ -37,8 +40,6 @@ def register_session(session_id):
         else:
             response.set_cookie('session_id', session_id, expires=datetime.datetime.now() + datetime.timedelta(days=365), path="/", secret=cookie_secret)
             redirect('/')
-
-
 
 
 @app.route('/<filepath:path>')
