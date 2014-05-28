@@ -2,13 +2,11 @@
 
 import datetime
 
-from functools import wraps
-
 from bottle import Bottle, run, static_file, request, template, response, redirect
 
 from settings import devices_definitions, server_params, session_db_file, cookie_secret
 from models import Device, DeviceWrongAction
-from utils import DbSession
+from utils import DbSession, session_required
 
 app = Bottle()
 
@@ -16,23 +14,6 @@ devices = {}
 
 for d in devices_definitions:
     devices[d['pin']] = Device(name=d['name'], pin=d['pin'], action=d['action'])
-
-
-def session_required(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        session_id = request.get_cookie('session_id', secret=cookie_secret)
-        if session_id is None:
-            response.status = 403
-            return 'Missing session_id.'
-        with DbSession(session_db_file) as c:
-            result = c.execute('SELECT session_id FROM sessions WHERE session_id = ?;', (session_id,)).fetchone()
-            if result is None:
-                response.status = 403
-                return 'Wrong session_id.'
-        return func(*args, **kwargs)
-    return wrapper
-
 
 @app.route('/')
 @session_required
