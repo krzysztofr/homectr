@@ -1,2 +1,3 @@
 bottle==0.12.7
 -e git://github.com/krzysztofr/gpio_wrapper.git#egg=gpio_wrapper
+newrelic==2.20.0.17

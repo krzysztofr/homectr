@@ -4,3 +4,5 @@
 .env
 settings.py
 users.db
+newrelic.ini
+
