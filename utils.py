@@ -5,8 +5,6 @@ from functools import wraps
 
 from bottle import request, response
 
-from settings import cookie_secret, session_db_file
-
 
 class DbSession:
     def __init__(self, filename):
@@ -24,6 +22,7 @@ class DbSession:
 def session_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
+        from settings import cookie_secret, session_db_file
         session_id = request.get_cookie('session_id', secret=cookie_secret)
         if session_id is None:
             response.status = 403
