@@ -49,7 +49,7 @@ class Session:
         raise NotImplementedError
 
     @staticmethod
-    def new(id, email='', comment=''):
+    def new(session_id, email='', comment=''):
         # creates new session
         raise NotImplementedError
 
