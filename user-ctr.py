@@ -10,6 +10,7 @@ from email.mime.text import MIMEText
 import settings
 
 from utils import DbSession
+from models import Session
 
 
 def send_session_id(email, session_id):
@@ -69,8 +70,7 @@ def delete_session(args):
 def init_db(args):
     """Initialises database file."""
 
-    with DbSession(args.file) as c:
-        c.execute("CREATE TABLE IF NOT EXISTS [sessions] ([session_id] VARCHAR PRIMARY KEY NOT NULL UNIQUE, [comment] VARCHAR, [email] VARCHAR);")
+    Session.init_db_file(args.file)
 
     print "Database in file %s initialized." % args.file
 

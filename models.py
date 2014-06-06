@@ -4,6 +4,8 @@ from time import sleep
 
 from gpio_wrapper import gpio_commands
 
+from utils import DbSession
+
 
 class DeviceWrongAction(Exception):
     pass
@@ -33,3 +35,12 @@ class Device:
             sleep(.1)
             gpio_commands.write(pin=self.pin, value=0)
 
+
+class Session:
+    def __init__(self):
+        pass  # W.I.P.
+
+    @staticmethod
+    def init_db_file(filename):
+        with DbSession(filename) as c:
+            c.execute("CREATE TABLE IF NOT EXISTS [sessions] ([session_id] VARCHAR PRIMARY KEY NOT NULL UNIQUE, [comment] VARCHAR, [email] VARCHAR);")
