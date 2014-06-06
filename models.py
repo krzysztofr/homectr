@@ -38,7 +38,32 @@ class Device:
 
 class Session:
     def __init__(self):
-        pass  # W.I.P.
+        raise NotImplementedError
+
+    def send_email(self):
+        # sends email with session information
+        raise NotImplementedError
+
+    def delete(self):
+        # removes self
+        raise NotImplementedError
+
+    @staticmethod
+    def new(id, email='', comment=''):
+        # creates new session
+        raise NotImplementedError
+
+    @staticmethod
+    def fetch_all():
+        # returns iterable
+        raise NotImplementedError
+
+    @staticmethod
+    def get(session_id):
+        # returns session object of given id or None
+        raise NotImplementedError
+
+
 
     @staticmethod
     def init_db_file(filename):
