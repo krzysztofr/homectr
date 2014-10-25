@@ -23,7 +23,7 @@ class Device:
             raise DeviceWrongAction("Wrong action selected")
         self.action = action
         self.status = False
-        gpio_commands.mode(pin=self.pin, mode='out')
+        gpio_commands.mode(pin=self.pin, set_mode='out')
         gpio_commands.write(pin=self.pin, value=0)
 
     def switch(self):
