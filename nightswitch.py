@@ -21,7 +21,7 @@ for d in devices_definitions:
 
 if prev_setting < 15 and devices[15].read_state() == 0:
     devices[15].switch()
-if next_sunrise < 15 and devices[15].read_state() == 1:
+elif next_sunrise < 15 and devices[15].read_state() == 1:
     devices[15].switch()
 
 
