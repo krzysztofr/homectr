@@ -20,26 +20,26 @@ class Device:
     ACTION_SWITCH = 1
     ACTION_PULSE = 2
 
-    def __init__(self, name, pin, action):
+    def __init__(self, name, pin, action, reset_state=True):
         self.name = name
         self.pin = pin
         if action not in (Device.ACTION_PULSE, Device.ACTION_SWITCH):
             raise DeviceWrongAction("Wrong action selected")
         self.action = action
-        self.status = False
-        gpio_commands.mode(pin=self.pin, set_mode='out')
-        gpio_commands.write(pin=self.pin, value=0)
+        if reset_state:
+            gpio_commands.mode(pin=self.pin, set_mode='out')
+            gpio_commands.write(pin=self.pin, value=0)
 
-        # We assume that the initial state is "off". It is impossible to read
-        # actual state as well as the state can be interfered by the physical
-        # buttons (in case of "PULSE" switches). I will deal with that later. (FIXME)
-        self.write_state(state=0)
+            # We assume that the initial state is "off". It is impossible to read
+            # actual state as well as the state can be interfered by the physical
+            # buttons (in case of "PULSE" switches). I will deal with that later. (FIXME)
+            self.write_state(state=0)
 
     def switch(self):
         if self.action == Device.ACTION_SWITCH:
-            self.status = int(not self.status)
-            gpio_commands.write(pin=self.pin, value=self.status)
-            self.write_state(self.status)
+            status = int(not self.read_state())
+            gpio_commands.write(pin=self.pin, value=status)
+            self.write_state(status)
 
         elif self.action == Device.ACTION_PULSE:
             gpio_commands.write(pin=self.pin, value=1)
