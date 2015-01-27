@@ -29,5 +29,6 @@ smtp = {
 app_address = 'http://www.example.com'
 
 session_db_file = 'users.db'
+state_db_file = 'states.db'
 
 cookie_secret = "substitute-your-secret-string-here"

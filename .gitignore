@@ -4,3 +4,4 @@
 .env
 settings.py
 users.db
+states.db

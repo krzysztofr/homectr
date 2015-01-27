@@ -6,6 +6,10 @@ from gpio_wrapper import gpio_commands
 
 from utils import DbSession
 
+import pickledb
+
+import settings
+
 
 class DeviceWrongAction(Exception):
     pass
@@ -26,14 +30,33 @@ class Device:
         gpio_commands.mode(pin=self.pin, set_mode='out')
         gpio_commands.write(pin=self.pin, value=0)
 
+        # We assume that the initial state is "off". It is impossible to read
+        # actual state as well as the state can be interfered by the physical
+        # buttons (in case of "PULSE" switches). I will deal with that later. (FIXME)
+        self.write_state(state=0)
+
     def switch(self):
         if self.action == Device.ACTION_SWITCH:
-            self.status = not self.status
-            gpio_commands.write(pin=self.pin, value=int(self.status))
+            self.status = int(not self.status)
+            gpio_commands.write(pin=self.pin, value=self.status)
+            self.write_state(self.status)
+
         elif self.action == Device.ACTION_PULSE:
             gpio_commands.write(pin=self.pin, value=1)
             sleep(.1)
             gpio_commands.write(pin=self.pin, value=0)
+            self.write_state(int(not self.read_state()))
+
+    def read_state(self):
+        db = pickledb.load(settings.state_db_file, False)
+        state = db.get("state"+str(self.pin))
+        return state
+
+    def write_state(self, state):
+        db = pickledb.load(settings.state_db_file, False)
+        db.set("state"+str(self.pin), state)
+        db.dump()
+        return True
 
 
 class Session:
